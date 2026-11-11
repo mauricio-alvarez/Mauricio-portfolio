@@ -1,0 +1,77 @@
+---
+// Decorative diagram for the concept-connectome project: concepts per network
+// stage, with edge weight drawn as stroke thickness. Deterministic, no data.
+const W = 640;
+const H = 400;
+const layers = [
+  { x: 70, n: 3, label: 'stage 1' },
+  { x: 215, n: 5, label: 'stage 2' },
+  { x: 360, n: 4, label: 'stage 3' },
+  { x: 495, n: 3, label: 'head' },
+  { x: 590, n: 1, label: 'class' },
+];
+const top = 40;
+const bottom = 320;
+
+const nodes = layers.map((layer, li) =>
+  Array.from({ length: layer.n }, (_, i) => ({
+    x: layer.x,
+    y: layer.n === 1 ? (top + bottom) / 2 : top + ((bottom - top) * i) / (layer.n - 1),
+    li,
+    i,
+  })),
+);
+
+// Small deterministic hash so the picture is identical on every build.
+const weight = (l: number, a: number, b: number) => {
+  const v = Math.sin((l + 1) * 91.7 + (a + 1) * 37.3 + (b + 1) * 53.9) * 43758.5453;
+  return v - Math.floor(v);
+};
+
+const edges = [];
+for (let l = 0; l < nodes.length - 1; l++) {
+  for (const a of nodes[l]) {
+    for (const b of nodes[l + 1]) {
+      const w = weight(l, a.i, b.i);
+      if (w > 0.3) edges.push({ a, b, w, strong: w > 0.8 });
+    }
+  }
+}
+const strongNodes = new Set(
+  edges.filter((e) => e.strong).flatMap((e) => [`${e.a.li}-${e.a.i}`, `${e.b.li}-${e.b.i}`]),
+);
+---
+
+<svg class="graph" viewBox={`0 0 ${W} ${H}`} role="img" aria-hidden="true">
+  <g fill="none" stroke-linecap="round">
+    {
+      edges.map((e) => (
+        <path
+          d={`M${e.a.x} ${e.a.y} C${(e.a.x + e.b.x) / 2} ${e.a.y}, ${(e.a.x + e.b.x) / 2} ${e.b.y}, ${e.b.x} ${e.b.y}`}
+          class={e.strong ? 'edge strong' : 'edge'}
+          stroke-width={(0.6 + e.w * 2.2).toFixed(2)}
+          stroke-opacity={e.strong ? 1 : (0.12 + e.w * 0.35).toFixed(2)}
+        />
+      ))
+    }
+  </g>
+  {
+    nodes
+      .flat()
+      .map((n) => (
+        <circle
+          cx={n.x}
+          cy={n.y}
+          r={n.li === nodes.length - 1 ? 13 : 9}
+          class={strongNodes.has(`${n.li}-${n.i}`) ? 'node strong' : 'node'}
+        />
+      ))
+  }
+  {
+    layers.map((layer) => (
+      <text x={layer.x} y={H - 28} text-anchor="middle" class="graph-label">
+        {layer.label}
+      </text>
+    ))
+  }
+</svg>
