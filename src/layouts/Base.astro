@@ -4,6 +4,7 @@ import '@fontsource-variable/geist-mono';
 import '../styles/global.css';
 import { site, type Lang } from '../data/site';
 import { ui, homePath } from '../i18n/ui';
+import Backdrop from '../components/Backdrop.astro';
 
 interface Props {
   lang: Lang;
@@ -60,6 +61,7 @@ const person = {
     </script>
   </head>
   <body>
+    <Backdrop />
     <a class="skip" href="#main">{t.skip}</a>
     <slot />
     <script>

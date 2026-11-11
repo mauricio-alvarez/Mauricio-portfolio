@@ -1,0 +1,149 @@
+---
+// Site-wide background: a dot grid with a slow wave passing through it, like
+// activations moving across a layer. Dots near the pointer pick up the accent.
+---
+
+<canvas class="backdrop" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.querySelector<HTMLCanvasElement>('.backdrop');
+  const ctx = canvas?.getContext('2d');
+
+  if (canvas && ctx) {
+    const GAP = 30; // px between dots
+    const REACH = 150; // px radius of the pointer highlight
+    const FRAME = 1000 / 30; // the motion is slow, 30fps is plenty
+
+    const still = matchMedia('(prefers-reduced-motion: reduce)');
+    const root = document.documentElement;
+    let width = 0;
+    let height = 0;
+    let ink = '#16171a';
+    let accent = '#c2391a';
+    let pointerX = -9999;
+    let pointerY = -9999;
+    let raf = 0;
+    let last = 0;
+
+    const readColors = () => {
+      const css = getComputedStyle(root);
+      ink = css.getPropertyValue('--ink').trim() || ink;
+      accent = css.getPropertyValue('--accent').trim() || accent;
+    };
+
+    const resize = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      width = innerWidth;
+      height = innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = (ms: number) => {
+      const t = ms / 1000;
+      ctx.clearRect(0, 0, width, height);
+
+      // Centre the grid so the margins are even on both sides.
+      const cols = Math.ceil(width / GAP);
+      const rows = Math.ceil(height / GAP);
+      const offsetX = (width - (cols - 1) * GAP) / 2;
+      const offsetY = (height - (rows - 1) * GAP) / 2;
+
+      for (let r = 0; r < rows; r++) {
+        const y = offsetY + r * GAP;
+        for (let c = 0; c < cols; c++) {
+          const x = offsetX + c * GAP;
+
+          // Two slow, crossing waves; the product gives soft travelling patches.
+          const wave =
+            Math.sin(x * 0.011 + t * 0.55) * Math.cos(y * 0.013 - t * 0.4) +
+            Math.sin((x + y) * 0.007 - t * 0.3);
+          const level = Math.max(0, wave / 2); // 0..1, zero for half the field
+
+          const dx = x - pointerX;
+          const dy = y - pointerY;
+          const near = Math.max(0, 1 - Math.hypot(dx, dy) / REACH);
+
+          if (near > 0.02) {
+            ctx.globalAlpha = 0.25 + near * 0.65;
+            ctx.fillStyle = accent;
+          } else {
+            ctx.globalAlpha = 0.07 + level * 0.3;
+            ctx.fillStyle = ink;
+          }
+          const size = 1 + level * 0.8 + near * 1.4;
+          ctx.beginPath();
+          ctx.arc(x, y, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const loop = (ms: number) => {
+      raf = requestAnimationFrame(loop);
+      if (ms - last < FRAME) return;
+      last = ms;
+      draw(ms);
+    };
+
+    const start = () => {
+      cancelAnimationFrame(raf);
+      if (still.matches) {
+        draw(0); // a single still frame for people who prefer no motion
+      } else if (!document.hidden) {
+        raf = requestAnimationFrame(loop);
+      }
+    };
+
+    readColors();
+    resize();
+    start();
+
+    addEventListener('resize', () => {
+      resize();
+      // Resizing clears the canvas; repaint at once so it never flashes empty
+      // (phones fire this every time the address bar slides away).
+      draw(still.matches ? 0 : performance.now());
+    });
+    document.addEventListener('visibilitychange', start);
+    still.addEventListener('change', start);
+
+    // Only a real mouse gets the highlight; on touch it would stick where you tapped.
+    addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType !== 'mouse') return;
+        pointerX = e.clientX;
+        pointerY = e.clientY;
+      },
+      { passive: true },
+    );
+    document.addEventListener('pointerleave', () => {
+      pointerX = pointerY = -9999;
+    });
+
+    // Follow theme changes, whether from the toggle or the system.
+    const recolor = () => {
+      readColors();
+      if (still.matches) draw(0);
+    };
+    new MutationObserver(recolor).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
+  }
+</script>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    /* Fade toward the bottom so long text sections stay calm. */
+    mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / 0.45) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 45%, rgb(0 0 0 / 0.45) 100%);
+  }
+</style>
