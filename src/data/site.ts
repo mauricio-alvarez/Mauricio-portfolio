@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { join } from 'node:path';
 
 export type Lang = 'es' | 'en';
 
@@ -11,24 +11,28 @@ export const site = {
   name: 'Mauricio Alvarez',
   url: 'https://mauricioalvarezj.tech',
   github: 'https://github.com/mauricio-alvarez',
-  linkedin: null as string | null, // e.g. 'https://www.linkedin.com/in/your-handle'
-  email: null as string | null, // e.g. 'hello@mauricioalvarezj.tech'
+  linkedin: 'https://www.linkedin.com/in/mauricio-alvarez' as string | null,
+  email: 'mauricio.alvarez@utec.edu.pe' as string | null,
 };
 
 /**
  * CV download: drop a PDF into `public/cv/` and the button appears by itself.
- *   public/cv/Mauricio-Alvarez-CV-ES.pdf   (Spanish page)
- *   public/cv/Mauricio-Alvarez-CV-EN.pdf   (English page)
- *   public/cv/Mauricio-Alvarez-CV.pdf      (fallback for both)
+ *   public/cv/Mauricio-Alvarez-CV-ES.pdf   (Spanish)
+ *   public/cv/Mauricio-Alvarez-CV-EN.pdf   (English)
+ *   public/cv/Mauricio-Alvarez-CV.pdf      (no language in the name)
+ * A page whose own language is missing falls back to the other one and says so.
  */
-export function cvPath(lang: Lang): string | null {
-  const candidates = [
-    `Mauricio-Alvarez-CV-${lang.toUpperCase()}.pdf`,
-    'Mauricio-Alvarez-CV.pdf',
+export function cvFile(lang: Lang): { href: string; lang: Lang | null } | null {
+  const other: Lang = lang === 'es' ? 'en' : 'es';
+  const candidates: { file: string; lang: Lang | null }[] = [
+    { file: `Mauricio-Alvarez-CV-${lang.toUpperCase()}.pdf`, lang },
+    { file: 'Mauricio-Alvarez-CV.pdf', lang: null },
+    { file: `Mauricio-Alvarez-CV-${other.toUpperCase()}.pdf`, lang: other },
   ];
-  for (const file of candidates) {
-    const onDisk = fileURLToPath(new URL(`../../public/cv/${file}`, import.meta.url));
-    if (existsSync(onDisk)) return `/cv/${file}`;
+  for (const c of candidates) {
+    // Resolved from the project root: the build bundles this module elsewhere.
+    const onDisk = join(process.cwd(), 'public', 'cv', c.file);
+    if (existsSync(onDisk)) return { href: `/cv/${c.file}`, lang: c.lang };
   }
   return null;
 }

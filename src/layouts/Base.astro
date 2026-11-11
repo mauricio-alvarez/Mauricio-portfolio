@@ -16,6 +16,8 @@ const person = {
   '@type': 'Person',
   name: site.name,
   url: site.url,
+  jobTitle: lang === 'es' ? 'Analista de Datos e Inteligencia Artificial' : 'Data & Artificial Intelligence Analyst',
+  worksFor: { '@type': 'Organization', name: 'Izipay' },
   address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
   alumniOf: 'UTEC — Universidad de Ingeniería y Tecnología',
   sameAs: [site.github, site.linkedin].filter(Boolean),

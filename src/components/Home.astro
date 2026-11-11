@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import ConceptGraph from './ConceptGraph.astro';
-import { site, cvPath, type Lang } from '../data/site';
+import { site, cvFile, type Lang } from '../data/site';
 import { featured, more } from '../data/projects';
 import { experience, education, skills } from '../data/cv';
 import { ui, homePath } from '../i18n/ui';
@@ -17,7 +17,9 @@ interface Props {
 }
 const { lang } = Astro.props;
 const t = ui[lang];
-const cv = cvPath(lang);
+const cv = cvFile(lang);
+// Say so when the only PDF available is in the other language.
+const cvLabel = cv && cv.lang && cv.lang !== lang ? t.ctaCvOther : t.ctaCv;
 const pad = (n: number) => String(n).padStart(2, '0');
 const nav = [
   { href: '#projects', label: t.nav.projects },
@@ -63,8 +65,8 @@ const nav = [
         <a class="btn primary" href="#projects">{t.ctaProjects}</a>
         {
           cv && (
-            <a class="btn" href={cv} download>
-              {t.ctaCv}
+            <a class="btn" href={cv.href} download>
+              {cvLabel}
             </a>
           )
         }
@@ -236,8 +238,8 @@ const nav = [
         {
           cv && (
             <p class="cv-download">
-              <a class="btn primary" href={cv} download>
-                {t.ctaCv} <span aria-hidden="true">↓</span>
+              <a class="btn primary" href={cv.href} download>
+                {cvLabel} <span aria-hidden="true">↓</span>
               </a>
             </p>
           )

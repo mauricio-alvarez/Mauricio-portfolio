@@ -30,7 +30,10 @@ Drop the PDF in `public/cv/` and the "Download CV" buttons appear on the next bu
 
 - `Mauricio-Alvarez-CV-ES.pdf` for the Spanish page
 - `Mauricio-Alvarez-CV-EN.pdf` for the English page
-- `Mauricio-Alvarez-CV.pdf` as a fallback for both
+- `Mauricio-Alvarez-CV.pdf` when the file has no language
+
+A page whose own language is missing links to the other one and labels it.
+The timeline on the page is a summary in `src/data/cv.ts`; update it when the PDF changes.
 
 ## Domain
 

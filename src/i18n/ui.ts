@@ -4,18 +4,20 @@ export const ui = {
   es: {
     metaTitle: 'Mauricio Alvarez — IA explicable y sistemas que escalan',
     metaDescription:
-      'Portafolio de Mauricio Alvarez: IA explicable, visión por computadora, aprendizaje por refuerzo, modelos en el dispositivo y plataformas full-stack. Lima, Perú.',
+      'Portafolio de Mauricio Alvarez, analista de Datos e IA en Lima: agentes de IA en producción, IA explicable, visión por computadora, aprendizaje por refuerzo y desarrollo full-stack.',
     skip: 'Saltar al contenido',
     nav: { projects: 'Proyectos', about: 'Sobre mí', cv: 'CV', contact: 'Contacto' },
     langLabel: 'Idioma',
     themeLabel: 'Cambiar entre tema claro y oscuro',
-    eyebrow: 'Lima, Perú · Ciencias de la Computación, UTEC',
+    eyebrow: 'Lima, Perú · Analista de Datos e IA en Izipay',
     heroTitle: ['Sistemas de IA que se pueden ', 'explicar', ' y escalar.'],
     heroLead:
-      'Soy Mauricio Alvarez. Trabajo entre la investigación y el producto: visión por computadora interpretable, aprendizaje por refuerzo, modelos que corren en el dispositivo y las plataformas que los llevan a producción.',
+      'Soy Mauricio Alvarez. Construyo agentes de IA y automatizaciones que funcionan en producción, e investigo visión por computadora interpretable, aprendizaje por refuerzo y modelos que corren en el dispositivo.',
     ctaProjects: 'Ver proyectos',
     ctaCv: 'Descargar CV',
+    ctaCvOther: 'Descargar CV (en inglés)',
     focus: [
+      'Agentes de IA',
       'IA explicable',
       'Visión por computadora',
       'Aprendizaje por refuerzo',
@@ -33,7 +35,7 @@ export const ui = {
     aboutTitle: 'Sobre mí',
     about: [
       'Me interesa entender por qué un modelo decide lo que decide, y construir lo necesario para que esa respuesta llegue a alguien: el entrenamiento, la API, la interfaz y el despliegue.',
-      'Vengo de Ciencias de la Computación en UTEC, en Lima. Por eso mis proyectos van desde estructuras de archivos escritas en C++ hasta apps nativas de iOS y servicios en Google Cloud.',
+      'Egresé de Ciencias de la Computación en UTEC, en el quinto superior de la carrera, y hoy trabajo en el equipo de Data & Analytics de Izipay. Mis proyectos personales van desde estructuras de archivos escritas en C++ hasta apps nativas de iOS y servicios en la nube.',
     ],
     skillsTitle: 'Con qué trabajo',
     cvTitle: 'CV',
@@ -51,18 +53,20 @@ export const ui = {
   en: {
     metaTitle: 'Mauricio Alvarez — Explainable AI and systems that scale',
     metaDescription:
-      'Portfolio of Mauricio Alvarez: explainable AI, computer vision, reinforcement learning, on-device models and full-stack platforms. Lima, Peru.',
+      'Portfolio of Mauricio Alvarez, Data & AI analyst in Lima: AI agents in production, explainable AI, computer vision, reinforcement learning and full-stack development.',
     skip: 'Skip to content',
     nav: { projects: 'Projects', about: 'About', cv: 'CV', contact: 'Contact' },
     langLabel: 'Language',
     themeLabel: 'Switch between light and dark theme',
-    eyebrow: 'Lima, Peru · Computer Science, UTEC',
+    eyebrow: 'Lima, Peru · Data & AI Analyst at Izipay',
     heroTitle: ['AI systems you can ', 'explain', ' and scale.'],
     heroLead:
-      "I'm Mauricio Alvarez. I work between research and product: interpretable computer vision, reinforcement learning, models that run on the device, and the platforms that take them to production.",
+      "I'm Mauricio Alvarez. I build AI agents and automations that run in production, and I research interpretable computer vision, reinforcement learning and models that run on the device.",
     ctaProjects: 'See projects',
     ctaCv: 'Download CV',
+    ctaCvOther: 'Download CV (in Spanish)',
     focus: [
+      'AI agents',
       'Explainable AI',
       'Computer vision',
       'Reinforcement learning',
@@ -79,7 +83,7 @@ export const ui = {
     aboutTitle: 'About',
     about: [
       'I care about understanding why a model decides what it decides, and about building what it takes for that answer to reach someone: the training, the API, the interface and the deployment.',
-      'My background is Computer Science at UTEC, in Lima. That is why my projects range from file structures written in C++ to native iOS apps and services on Google Cloud.',
+      "I graduated in Computer Science from UTEC, in the top fifth of the programme, and today I work on Izipay's Data & Analytics team. My personal projects range from file structures written in C++ to native iOS apps and cloud services.",
     ],
     skillsTitle: 'What I work with',
     cvTitle: 'CV',
